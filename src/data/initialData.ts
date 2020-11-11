@@ -1,23 +1,34 @@
-import { ProductLine, Invoice } from './types'
+import {Invoice, ProductLine} from './types'
+import dateFormats from "./dateFormats";
 
 export const initialProductLine: ProductLine = {
-  description: '',
-  quantity: '1',
-  rate: '0.00',
+  description: 'Brochure Design',
+  quantity: 1,
+  taxRate: 0.21,
+  price: 100.00,
 }
 
-export const initialInvoice: Invoice = {
+const DEFAULT_LOCALE = 'en-EN';
+const defaultLocale = navigator.language || DEFAULT_LOCALE;
+const defaultDateFormat = dateFormats[defaultLocale] || dateFormats[DEFAULT_LOCALE];
+const defaultCountry = defaultLocale.split('-')[1];
+
+export const  defaultInvoice: Invoice = {
+
+  locale: defaultLocale,
+  dateFormat: defaultDateFormat,
+
   title: 'INVOICE',
   companyName: '',
   name: '',
   companyAddress: '',
   companyAddress2: '',
-  companyCountry: 'United States',
+  companyCountry: defaultCountry,
   billTo: 'Bill To:',
   clientName: '',
   clientAddress: '',
   clientAddress2: '',
-  clientCountry: 'United States',
+  clientCountry: defaultCountry,
   invoiceTitleLabel: 'Invoice#',
   invoiceTitle: '',
   invoiceDateLabel: 'Invoice Date',
@@ -25,20 +36,16 @@ export const initialInvoice: Invoice = {
   invoiceDueDateLabel: 'Due Date',
   invoiceDueDate: '',
   productLineDescription: 'Item Description',
-  productLineQuantity: 'Qty',
-  productLineQuantityRate: 'Rate',
-  productLineQuantityAmount: 'Amount',
+  productLineQuantity: 'Quantity',
+  productLinePrice: 'Price',
+  productLineTaxRate: 'Tax Rate',
+  productLineSum: 'Sum',
   productLines: [
-    {
-      description: 'Brochure Design',
-      quantity: '2',
-      rate: '100.00',
-    },
-    { ...initialProductLine },
-    { ...initialProductLine },
+    {...initialProductLine},
+    {...initialProductLine},
   ],
   subTotalLabel: 'Sub Total',
-  taxLabel: 'Sale Tax (10%)',
+  taxLabel: 'Sale Tax',
   totalLabel: 'TOTAL',
   currency: '$',
   notesLabel: 'Notes',

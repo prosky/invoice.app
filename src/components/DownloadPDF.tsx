@@ -31,7 +31,7 @@ const Download: FC<Props> = ({ data }) => {
           document={<InvoicePage pdfMode={true} data={data} />}
           fileName={`${getFileName()}.pdf`}
           aria-label="Save PDF"
-        ></PDFDownloadLink>
+        />
       )}
     </div>
   )

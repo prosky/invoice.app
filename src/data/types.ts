@@ -1,12 +1,16 @@
-import { CSSProperties } from 'react'
+import {CSSProperties} from 'react'
 
 export interface ProductLine {
   description: string
-  quantity: string
-  rate: string
+  quantity: number
+  taxRate: number
+  price: number
 }
 
 export interface Invoice {
+  locale: string,
+  dateFormat: string,
+
   title: string
   companyName: string
   name: string
@@ -29,8 +33,9 @@ export interface Invoice {
 
   productLineDescription: string
   productLineQuantity: string
-  productLineQuantityRate: string
-  productLineQuantityAmount: string
+  productLinePrice: string
+  productLineTaxRate: string
+  productLineSum: string
 
   productLines: ProductLine[]
 
