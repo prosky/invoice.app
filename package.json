@@ -1,8 +1,8 @@
 {
-  "name": "invoice-generator",
+  "name": "@prosky/invoice.app",
   "version": "0.2.1",
   "private": true,
-  "homepage": "https://tuanpham-dev.github.io/react-invoice-generator/",
+  "homepage": "https://prosky.github.io/invoice.app/",
   "dependencies": {
     "@react-pdf/renderer": "^2.0.0-beta.6",
     "@testing-library/jest-dom": "^5.11.5",
