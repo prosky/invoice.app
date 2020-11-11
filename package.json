@@ -1,0 +1,53 @@
+{
+  "name": "invoice-generator",
+  "version": "0.2.1",
+  "private": true,
+  "homepage": "https://tuanpham-dev.github.io/react-invoice-generator/",
+  "dependencies": {
+    "@react-pdf/renderer": "^2.0.0-beta.6",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.2",
+    "@testing-library/user-event": "^12.2.2",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^14.14.7",
+    "@types/react": "^16.9.56",
+    "@types/react-dom": "^16.9.9",
+    "date-fns": "^2.16.1",
+    "react": "^17.0.1",
+    "react-datepicker": "^3.3.0",
+    "react-dom": "^17.0.1",
+    "react-scripts": "4.0.0",
+    "react-textarea-autosize": "^8.3.0",
+    "typescript": "~4.0.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/date-fns": "^2.6.0",
+    "@types/react-datepicker": "^3.1.1",
+    "@types/react-textarea-autosize": "^4.3.5",
+    "gh-pages": "^3.1.0",
+    "node-sass": "<5.0.0"
+  }
+}
