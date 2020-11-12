@@ -1,4 +1,4 @@
-import { CSSClasses } from '../data/types'
+import {CSSClasses} from '../data/types'
 
 const colorDark = '#222'
 const colorDark2 = '#666'
@@ -125,12 +125,25 @@ const styles: CSSClasses = {
     fontSize: '45px',
   },
 
+  'cell-width': {
+    width: '13%',
+  },
+
+  'cell-width-big': {
+    width: '48%',
+  },
+
+  'cell-padding': {
+    padding: '2px',
+  },
+
   page: {
     fontFamily: 'Nunito',
     fontSize: '13px',
     color: '#555',
     padding: '40px 35px',
-  },
+  }
+  ,
 
   span: {
     padding: '4px 12px 4px 0',

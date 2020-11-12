@@ -1,40 +1,46 @@
-import React, { FC, useEffect, useState } from 'react'
-import { PDFDownloadLink } from '@react-pdf/renderer'
-import { Invoice } from '../data/types'
-import InvoicePage from './InvoicePage'
+import React, {FC, useContext} from 'react';
+import ApplicationContext from "../ApplicationContext";
+import {pdf} from "@react-pdf/renderer";
+import {saveAs} from 'file-saver';
+import InvoicePage from "./InvoicePage";
+import {Invoice} from "../data/types";
+import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
+import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser";
 
-interface Props {
-  data: Invoice
+
+const getFileName = (data: Invoice) => {
+  return (data.invoiceTitle || 'invoice').toLowerCase()
+}
+const getBlob = async (data: Invoice) => {
+  const doc = <InvoicePage pdfMode={true} data={data}/>;
+  const asPdf = pdf(doc);
+  asPdf.updateContainer(doc);
+  return await asPdf.toBlob();
 }
 
-const Download: FC<Props> = ({ data }) => {
-  const [show, setShow] = useState<boolean>(false)
-
-  useEffect(() => {
-    setShow(false)
-
-    const timeout = setTimeout(() => {
-      setShow(true)
-    }, 500)
-
-    return () => clearTimeout(timeout)
-  }, [data])
-
-  const getFileName = ()=>{
-      return (data.invoiceTitle || 'invoice').toLowerCase()
-  }
-
+export const Download: FC = () => {
+  const {invoice: data} = useContext(ApplicationContext);
+  const download = async () => {
+    const blob = await getBlob(data);
+    saveAs(blob, getFileName(data));
+  };
   return (
-    <div className={'download-pdf ' + (!show ? 'loading' : '')} title="Save PDF">
-      {show && (
-        <PDFDownloadLink
-          document={<InvoicePage pdfMode={true} data={data} />}
-          fileName={`${getFileName()}.pdf`}
-          aria-label="Save PDF"
-        />
-      )}
-    </div>
-  )
+    <button className={'btn btn-primary'} title="Download PDF" onClick={download}>
+      <CloudDownloadIcon/>
+    </button>
+  );
 }
 
-export default Download
+export const Open: FC = () => {
+  const {invoice: data} = useContext(ApplicationContext);
+  const open = async () => {
+    const blob = await getBlob(data);
+    window.open(URL.createObjectURL(blob));
+  };
+  return (
+    <button className={'btn btn-primary'} title="Open PDF" onClick={open}>
+      <OpenInBrowserIcon/>
+    </button>
+  );
+}
+

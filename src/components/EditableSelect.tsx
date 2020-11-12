@@ -1,6 +1,7 @@
 import React, {FC, useState} from 'react'
 import {Text} from '@react-pdf/renderer'
 import compose from '../styles/compose'
+import PageContext from "../PageContext";
 
 export interface SelectOption {
   value: string
@@ -13,7 +14,6 @@ interface Props {
   placeholder?: string
   value?: string
   onChange?: (value: string) => void
-  pdfMode?: boolean
 }
 
 const EditableSelect: FC<Props> = ({
@@ -22,24 +22,26 @@ const EditableSelect: FC<Props> = ({
                                      placeholder,
                                      value,
                                      onChange,
-                                     pdfMode,
                                    }) => {
 
+    const {pdfMode} = React.useContext(PageContext);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+
+  const text = value ? options[value] || '' : '';
+
   return (
     <>
       {pdfMode ? (
-        <Text style={compose(`span ${className || ''}`)}>{value}</Text>
+        <Text style={compose(`span ${className}`)}>{text}</Text>
       ) : (
         <>
           {isEditing ? (
             <select
-              className={`select ${className || ''}`}
+              className={`select ${className}`}
               value={value}
               onChange={onChange ? (e) => onChange(e.target.value) : undefined}
               onBlur={() => setIsEditing(false)}
-              autoFocus={true}
-            >
+              autoFocus={true}>
               {Object.entries(options).map(([key, value]) => (
                 <option key={key} value={key}>{value}</option>
               ))}
@@ -48,9 +50,9 @@ const EditableSelect: FC<Props> = ({
             <input
               readOnly={true}
               type="text"
-              className={`input ${className || ''}`}
-              value={value ? options[value] || '' : ''}
-              placeholder={placeholder || ''}
+              className={`input ${className}`}
+              value={text}
+              placeholder={placeholder}
               onFocus={() => setIsEditing(true)}
             />
           )}

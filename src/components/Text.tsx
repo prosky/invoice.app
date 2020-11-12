@@ -1,14 +1,15 @@
 import React, { FC } from 'react'
 import { Text as PdfText } from '@react-pdf/renderer'
 import compose from '../styles/compose'
+import PageContext from "../PageContext";
 
 interface Props {
   className?: string
-  pdfMode?: boolean
   children?: string
 }
 
-const Text: FC<Props> = ({ className, pdfMode, children }) => {
+const Text: FC<Props> = ({ className, children }) => {
+    const {pdfMode} = React.useContext(PageContext);
   return (
     <>
       {pdfMode ? (

@@ -3,6 +3,7 @@ import {Text} from '@react-pdf/renderer'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import compose from '../styles/compose'
+import PageContext from "../PageContext";
 
 interface Props {
   className?: string
@@ -10,10 +11,10 @@ interface Props {
   dateFormat: string,
   selected?: Date
   onChange?: (date: Date | [Date, Date] | null) => void
-  pdfMode?: boolean
 }
 
-const EditableCalendarInput: FC<Props> = ({className, value, dateFormat, selected, onChange, pdfMode}) => {
+const EditableCalendarInput: FC<Props> = ({className, value, dateFormat, selected, onChange}) => {
+    const {pdfMode} = React.useContext(PageContext);
   return (
     <>
       {pdfMode ? (

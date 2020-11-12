@@ -40,25 +40,62 @@
   box-shadow: 0 0 17px 0 rgba(16, 40, 73, 0.09);
 }
 
-.download-pdf {
+.fixed-nav {
   position: fixed;
   top: 100px;
   margin-left: -110px;
+}
+
+.icon-open-pdf {
+  background-image: url('../images/open.svg');
+}
+
+.icon-download-pdf {
+  background-image: url('../images/download.svg');
+}
+
+.icon-pdf {
+  display: block;
   width: 40px;
   height: 40px;
-  background: url('../images/download.svg');
   transition: opacity 0.2s ease-in-out;
 
   &.loading {
     opacity: 0.3;
   }
+}
 
-  a {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+.btn {
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  display: inline-block;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  outline: none;
+  transition: .35s ease;
+  transition-property: color, background-color;
+  padding: 0;
+
+  &:focus {
+    background-color: rgba($color-primary, .1);
+  }
+
+  &-primary {
+    color: $color-primary;
+
+    &:hover {
+      color: darken($color-primary, 10%);
+    }
+  }
+  svg{
+    width: 40px;
+    height: 40px;
   }
 }
+
+
+
+

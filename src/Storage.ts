@@ -8,19 +8,11 @@ export interface StorageInterface {
 
 }
 
-function isInvoice(arg: any): arg is Invoice {
-  return arg && arg.prop && typeof(arg.prop) == 'number';
-}
-
 export class LocalStorage implements StorageInterface {
   load(): Invoice | null {
     const data = window.localStorage.getItem('data');
     if (!data) return null;
-    const parsed = JSON.parse(data);
-    if(isInvoice(parsed)){
-      return <Invoice>JSON.parse(data);
-    }
-    return null;
+    return JSON.parse(data);
   }
 
   save(data: Invoice): void {

@@ -1,8 +1,11 @@
+
+
 class Application {
 
     static storageKey = 'Application';
 
     locale: string = Application.findLocale();
+
 
     static findLocale(): string {
         return navigator.language.replace('-', '_');
