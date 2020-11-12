@@ -1,6 +1,6 @@
 import React from "react";
-import {Invoice} from "./data/types";
-import {defaultInvoice} from "./data/initialData";
+import {Invoice} from "../data/types";
+import {defaultInvoice} from "../data/initialData";
 
 
 interface ApplicationProps{

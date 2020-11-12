@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { Document as PdfDocument } from '@react-pdf/renderer'
-import PageContext from "../PageContext";
+import PageContext from "../model/PageContext";
 
 
 const Document: FC= ({  children }) => {

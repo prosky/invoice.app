@@ -1,12 +1,14 @@
 import React, {FC, useContext} from 'react';
-import ApplicationContext from "../ApplicationContext";
+import ApplicationContext from "../model/ApplicationContext";
 import {pdf} from "@react-pdf/renderer";
 import {saveAs} from 'file-saver';
 import InvoicePage from "./InvoicePage";
 import {Invoice} from "../data/types";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser";
 
+
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCloudDownloadAlt, faBookOpen} from '@fortawesome/free-solid-svg-icons';
+import {faExternalLinkAlt} from "@fortawesome/free-solid-svg-icons/faExternalLinkAlt";
 
 const getFileName = (data: Invoice) => {
   return (data.invoiceTitle || 'invoice').toLowerCase()
@@ -26,7 +28,7 @@ export const Download: FC = () => {
   };
   return (
     <button className={'btn btn-primary'} title="Download PDF" onClick={download}>
-      <CloudDownloadIcon/>
+      <FontAwesomeIcon icon={faCloudDownloadAlt}  size={'4x'}/>
     </button>
   );
 }
@@ -39,7 +41,7 @@ export const Open: FC = () => {
   };
   return (
     <button className={'btn btn-primary'} title="Open PDF" onClick={open}>
-      <OpenInBrowserIcon/>
+      <FontAwesomeIcon icon={faExternalLinkAlt} size={'4x'}/>
     </button>
   );
 }

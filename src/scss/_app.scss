@@ -71,13 +71,18 @@
   white-space: nowrap;
   vertical-align: middle;
   user-select: none;
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   background-color: transparent;
   background-repeat: no-repeat;
   outline: none;
   transition: .35s ease;
   transition-property: color, background-color;
   padding: 0;
+
+  font-weight: 600;
+  text-transform: uppercase;
 
   &:focus {
     background-color: rgba($color-primary, .1);
@@ -90,9 +95,14 @@
       color: darken($color-primary, 10%);
     }
   }
-  svg{
+
+  svg {
     width: 40px;
     height: 40px;
+  }
+
+  svg + span {
+    margin-left: .5rem;
   }
 }
 

@@ -89,3 +89,22 @@
     opacity: 1;
   }
 }
+
+.side-nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 300px;
+  padding: 1rem;
+}
+
+.img-fluid {
+  max-width: 100%;
+}
+.align-items-center{
+  align-items: center;
+}
+.block{
+  display: block;
+}

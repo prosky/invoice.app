@@ -1,13 +1,17 @@
 import React, {Component} from 'react'
 import {Download as DownloadPDF, Open as OpenPDF} from './DownloadPDF';
 import InvoicePage from "./InvoicePage";
-import ApplicationContext from "../ApplicationContext";
+import ApplicationContext from "../model/ApplicationContext";
 import {defaultInvoice} from "../data/initialData";
-import {LocalStorage} from "../Storage";
+import {LocalStorage} from "../model/Storage";
 import {Invoice} from "../data/types";
 
-import RefreshIcon from '@material-ui/icons/Refresh';
-import { withTranslation} from "react-i18next";
+
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faSync} from '@fortawesome/free-solid-svg-icons';
+
+import {withTranslation} from "react-i18next";
+import SelectSource from "./GoogleDrive/SelectSource";
 
 const storage = new LocalStorage();
 
@@ -39,27 +43,30 @@ class MainPage extends Component<any, Props> {
   }
 
   render() {
-    const { t } = this.props;
+    const {t} = this.props;
     return (
-      <ApplicationContext.Provider value={{invoice: this.state.invoice}}>
-        <h1 className="center primary fs-30">{t('React Invoice Generator')}</h1>
-        <div className={'fixed-nav'}>
-          <div className={'p-5'}>
-            <DownloadPDF/>
-          </div>
-          <div className={'p-5'}>
-            <OpenPDF/>
-          </div>
-          <div className={'p-5'}>
-            <button className={'btn btn-primary'}  title={t("Reset")}
-                    onClick={this.reset}>
-              <RefreshIcon />
-            </button>
-          </div>
-        </div>
+        <ApplicationContext.Provider value={{invoice: this.state.invoice}}>
 
-        <InvoicePage pdfMode={false} onUpdate={this.onUpdate}/>
-      </ApplicationContext.Provider>);
+          <h1 className="center primary fs-30">{t('React Invoice Generator')}</h1>
+          <div className={'fixed-nav'}>
+            <div className={'p-5'}>
+              <DownloadPDF/>
+            </div>
+            <div className={'p-5'}>
+              <OpenPDF/>
+            </div>
+            <div className={'p-5'}>
+              <button className={'btn btn-primary'} title={t("Reset")}
+                      onClick={this.reset}>
+                <FontAwesomeIcon icon={faSync} size={'4x'}/>
+              </button>
+            </div>
+          </div>
+          <aside id="side-nav" className={'side-nav'}>
+            <SelectSource/>
+          </aside>
+          <InvoicePage pdfMode={false} onUpdate={this.onUpdate}/>
+        </ApplicationContext.Provider>)
   }
 }
 

@@ -12,8 +12,8 @@ import Text from './Text'
 import format from 'date-fns/format'
 import {Font} from "@react-pdf/renderer";
 import languagesList from "../data/languagesList";
-import PageContext from "../PageContext";
-import ApplicationContext from "../ApplicationContext";
+import PageContext from "../model/PageContext";
+import ApplicationContext from "../model/ApplicationContext";
 import {useTranslation} from 'react-i18next';
 
 interface Props {
@@ -416,11 +416,13 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
           <View className="mt-20">
             <EditableInput
               className="bold w-100"
+              placeholder={t('Notes')}
               value={invoice.notesLabel}
               onChange={(value) => handleChange('notesLabel', value)}
             />
             <EditableTextarea
               className="w-100"
+              placeholder={t('It was great doing business with you.')}
               rows={2}
               value={invoice.notes}
               onChange={(value) => handleChange('notes', value)}
@@ -428,12 +430,14 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
           </View>
           <View className="mt-20">
             <EditableInput
+              placeholder={t('Terms & Conditions')}
               className="bold w-100"
               value={invoice.termLabel}
               onChange={(value) => handleChange('termLabel', value)}
             />
             <EditableTextarea
               className="w-100"
+              placeholder={t('Please make the payment by the due date.')}
               rows={2}
               value={invoice.term}
               onChange={(value) => handleChange('term', value)}

@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Page as PdfPage } from '@react-pdf/renderer'
 import compose from '../styles/compose'
-import PageContext from "../PageContext";
+import PageContext from "../model/PageContext";
 
 interface Props {
   className?: string

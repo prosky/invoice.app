@@ -3,7 +3,7 @@ import {Text} from '@react-pdf/renderer'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import compose from '../styles/compose'
-import PageContext from "../PageContext";
+import PageContext from "../model/PageContext";
 
 interface Props {
   className?: string

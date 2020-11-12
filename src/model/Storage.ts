@@ -1,4 +1,4 @@
-import {Invoice} from "./data/types";
+import {Invoice} from "../data/types";
 
 export interface StorageInterface {
 

@@ -2,8 +2,8 @@ import React, {FC} from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import {Text} from '@react-pdf/renderer'
 import compose from '../styles/compose'
-import PageContext from "../PageContext";
-import ApplicationContext from "../ApplicationContext";
+import PageContext from "../model/PageContext";
+import ApplicationContext from "../model/ApplicationContext";
 
 interface Props {
   className?: string
