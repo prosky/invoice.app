@@ -1,20 +1,21 @@
-import React, {FC, useContext, useState} from 'react'
+import React, {FC, useContext, useEffect, useState} from 'react'
 import {Invoice, ProductLine} from '../data/types'
 import {initialProductLine} from '../data/initialData'
-import EditableInput from './EditableInput'
-import EditableSelect from './EditableSelect'
-import EditableTextarea from './EditableTextarea'
-import EditableCalendarInput from './EditableCalendarInput'
+import EditableInput from './Inputs/EditableInput'
+import EditableSelect from './Inputs/EditableSelect'
+import EditableTextarea from './Inputs/EditableTextarea'
+import EditableCalendarInput from './Inputs/EditableCalendarInput'
 import Document from './Document'
 import Page from './Page'
 import View from './View'
 import Text from './Text'
 import format from 'date-fns/format'
 import {Font} from "@react-pdf/renderer";
-import languagesList from "../data/languagesList";
 import PageContext from "../model/PageContext";
 import ApplicationContext from "../model/ApplicationContext";
 import {useTranslation} from 'react-i18next';
+import countries from '../data/countries';
+
 
 interface Props {
   pdfMode: boolean
@@ -31,21 +32,19 @@ Font.register({
   ],
 });
 
-const CountriesLists: Record<string, Record<string, string>> = {};
-
-
-const getCountries = async (locale: string): Promise<Record<string, string>> => {
-  locale = locale.replace('-', '_');
-  if (!CountriesLists[locale]) {
-    const data = await import(`../data/countries/${locale}.json`);
-    CountriesLists[locale] = data.default;
-  }
-  return CountriesLists[locale];
-};
-
 const createDate = (val: string, defaultDate: Date = new Date()): Date => {
   return val ? new Date(val) : new Date(defaultDate);
 };
+
+const createFormatter = (inv: Invoice) => {
+  console.log(inv.locale, inv.currency);
+  return new Intl.NumberFormat(inv.locale, {
+    style: 'currency',
+    currency: inv.currency,
+  });
+};
+
+type Handler = <T>(item: T, key: keyof T, value: any) => void;
 
 const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
 
@@ -53,9 +52,9 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
 
   const invoice = data || contextData;
 
+  const [formatter, setFormatter] = useState<Intl.NumberFormat>();
   const [subTotal, setSubTotal] = useState<number>(0);
   const [saleTax, setSaleTax] = useState<number>(0);
-  const [countryList, setCountryList] = useState<Record<string, string>>({});
 
   const dateFormat = invoice.dateFormat;
 
@@ -72,10 +71,6 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
     setSaleTax(sumTax(invoice.productLines));
   }
 
-  getCountries(invoice.locale).then((countries: Record<string, string>) => {
-    setCountryList(countries);
-  });
-
   const invoiceDate = createDate(invoice.invoiceDate);
 
   const invoiceDueDate = createDate(invoice.invoiceDueDate, invoiceDate);
@@ -83,8 +78,7 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
   if (invoice.invoiceDueDate === '') {
     invoiceDueDate.setDate(invoiceDueDate.getDate() + 30);
   }
-
-  const handleChange = (name: keyof Invoice, value: string) => {
+  const handleChange = (item: Handler, name: keyof Handler, value: string) => {
     if (name !== 'productLines') {
       update({
         [name]: value
@@ -114,14 +108,16 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
     });
   }
 
-  const calculateAmount = (data: ProductLine) => {
-    const amount = calculatePrice(data) + calculateTax(data);
-    return amount.toFixed(2);
+  const calculateAmount = (data: ProductLine): number => {
+    return calculatePrice(data) + calculateTax(data);
   }
 
   const calculateTax = (data: ProductLine) => {
     const {taxRate, price, quantity} = data;
-    return price * (taxRate / 100) * quantity;
+    if (invoice.withVAT) {
+      return price * (taxRate / 100) * quantity;
+    }
+    return 0;
   }
 
   const calculatePrice = (data: ProductLine) => {
@@ -132,51 +128,67 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
   const formatDate = (date: Date | [Date, Date] | null) => {
     return date && !Array.isArray(date) ? format(date, invoice.dateFormat) : ''
   }
+  const {t} = useTranslation();
 
-  const {t, i18n} = useTranslation();
+  formatter || setFormatter(createFormatter(invoice));
+  useEffect(() => {
+    setFormatter(createFormatter(invoice));
+  }, [invoice.locale, invoice.currency])
+
+  const money = (s: number, withSymbol: boolean = false) => {
+    if (withSymbol) {
+      return formatter?.format(s);
+    }
+    return s.toLocaleString(invoice.locale, {minimumFractionDigits: 2});
+  }
 
   return (
     <PageContext.Provider value={{pdfMode}}>
       <Document>
         <Page className="invoice-wrapper">
-          {!pdfMode &&
-          <View className="flex w-50">
-            <label className="bold w-40" htmlFor="">Jazyk</label>
-            <EditableSelect
-              options={languagesList}
-              value={invoice.locale}
-              onChange={(value) => handleChange('locale', value)}
-            />
-          </View>}
-
           <View className="flex">
             <View className="w-50">
               <EditableInput
                 className="fs-20 bold"
                 placeholder={t("Your Company")}
-                value={invoice.companyName}
+                value={invoice.company.name}
                 onChange={(value) => handleChange('companyName', value)}
               />
               <EditableInput
                 placeholder={t("Your Name")}
                 value={invoice.name}
                 onChange={(value) => handleChange('name', value)}
-
               />
               <EditableInput
                 placeholder={t("Company's Address")}
-                value={invoice.companyAddress}
-                onChange={(value) => handleChange('companyAddress', value)}
+                value={invoice.company.address}
+                onChange={(value) => handleChange(invoice.company, 'address', value)}
               />
               <EditableInput
                 placeholder={t("City, State Zip")}
-                value={invoice.companyAddress2}
-                onChange={(value) => handleChange('companyAddress2', value)}
+                value={invoice.company.address2}
+                onChange={(value) => handleChange('company.address2', value)}
               />
               <EditableSelect
-                options={countryList}
-                value={invoice.companyCountry}
-                onChange={(value) => handleChange('companyCountry', value)}
+                placeholder={t("Company's Country")}
+                options={countries}
+                value={invoice.company.country}
+                onChange={(value) => handleChange('country', value)}
+              />
+              <EditableInput
+                placeholder={t("Company Identification Number")}
+                value={invoice.company.cin}
+                onChange={(value) => handleChange('cin', value)}
+              />
+              <EditableInput
+                placeholder={t("Tax Identification Number")}
+                value={invoice.company.tin}
+                onChange={(value) => handleChange('tin', value)}
+              />
+              <EditableInput
+                placeholder={t("Bank Account")}
+                value={invoice.company.accountNumber}
+                onChange={(value) => handleChange(invoice.company, 'accountNumber', value)}
               />
             </View>
             <View className="w-50">
@@ -211,7 +223,8 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
                 onChange={(value) => handleChange('clientAddress2', value)}
               />
               <EditableSelect
-                options={countryList}
+                options={countries}
+                placeholder={t("Client's Country")}
                 value={invoice.clientCountry}
                 onChange={(value) => handleChange('clientCountry', value)}
               />
@@ -285,13 +298,14 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
                 onChange={(value) => handleChange('productLineQuantity', value)}
               />
             </View>
-            <View className="cell-width cell-padding">
+            {invoice.withVAT && <View className="cell-width cell-padding">
               <EditableInput
                 className="white bold right"
                 value={invoice.productLineTaxRate}
                 onChange={(value) => handleChange('productLineTaxRate', value)}
               />
-            </View>
+            </View>}
+
             <View className="cell-width cell-padding">
               <EditableInput
                 className="white bold right"
@@ -326,13 +340,14 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
                   onChange={(value) => handleProductLineChange(productLine, 'quantity', value)}
                 />
               </View>
+              {invoice.withVAT &&
               <View className="cell-width cell-padding pb-10">
                 <EditableInput
                   className="dark right"
                   value={productLine.taxRate}
                   onChange={(value) => handleProductLineChange(productLine, 'taxRate', value)}
                 />
-              </View>
+              </View>}
               <View className="cell-width cell-padding pb-10">
                 <EditableInput
                   className="dark right"
@@ -342,7 +357,7 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
               </View>
               <View className="cell-width cell-padding pb-10">
                 <Text className="dark right">
-                  {calculateAmount(productLine)}
+                  {money(calculateAmount(productLine))}
                 </Text>
               </View>
               {!pdfMode && (
@@ -375,7 +390,7 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
                 </View>
                 <View className="w-50 p-5">
                   <Text className="right bold dark">
-                    {subTotal?.toFixed(2)}
+                    {money(subTotal)}
                   </Text>
                 </View>
               </View>
@@ -388,7 +403,7 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
                 </View>
                 <View className="w-50 p-5">
                   <Text className="right bold dark">
-                    {saleTax?.toFixed(2)}
+                    {money(saleTax)}
                   </Text>
                 </View>
               </View>
@@ -401,13 +416,8 @@ const InvoicePage: FC<Props> = ({pdfMode, onUpdate, data}) => {
                   />
                 </View>
                 <View className="w-50 p-5 flex">
-                  <EditableInput
-                    className="dark bold right ml-30"
-                    value={invoice.currency}
-                    onChange={(value) => handleChange('currency', value)}
-                  />
-                  <Text className="right bold dark w-auto">
-                    {(subTotal + saleTax).toFixed(2)}
+                  <Text className="right bold dark">
+                    {money((subTotal + saleTax), true)}
                   </Text>
                 </View>
               </View>

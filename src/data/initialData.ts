@@ -17,18 +17,27 @@ export const defaultInvoice: Invoice = {
 
   locale: defaultLocale,
   dateFormat: defaultDateFormat,
+  withVAT: false,
 
   title: 'INVOICE',
-  companyName: '',
   name: '',
-  companyAddress: '',
-  companyAddress2: '',
-  companyCountry: defaultCountry,
+
+  company:{
+    name: '',
+    address: '',
+    address2: '',
+    country: defaultCountry,
+  },
+
   billTo: 'Bill To:',
-  clientName: '',
-  clientAddress: '',
-  clientAddress2: '',
-  clientCountry: defaultCountry,
+
+  client:{
+    name: '',
+    address: '',
+    address2: '',
+    country: defaultCountry,
+  },
+
   invoiceTitleLabel: 'Invoice#',
   invoiceTitle: '',
   invoiceDateLabel: 'Invoice Date',
@@ -46,7 +55,7 @@ export const defaultInvoice: Invoice = {
   subTotalLabel: 'Sub Total',
   taxLabel: 'Sale Tax',
   totalLabel: 'TOTAL',
-  currency: '$',
+  currency: 'CZK',
   notesLabel: '',// 'Notes',
   notes: '',//'It was great doing business with you.',
   termLabel: '',//'Terms & Conditions',

@@ -2,21 +2,21 @@ import {Invoice} from "../data/types";
 
 export interface StorageInterface {
 
-  save(data: Invoice): void;
+  save(key: string, data: Invoice): void;
 
-  load(): Invoice | null;
+  load(key:string): Invoice | null;
 
 }
 
 export class LocalStorage implements StorageInterface {
-  load(): Invoice | null {
-    const data = window.localStorage.getItem('data');
+  load(key:string): Invoice | null {
+    const data = window.localStorage.getItem(key);
     if (!data) return null;
     return JSON.parse(data);
   }
 
-  save(data: Invoice): void {
-    window.localStorage.setItem('data', JSON.stringify(data));
+  save(key: string, data: Invoice): void {
+    window.localStorage.setItem(key, JSON.stringify(data));
   }
 
 }

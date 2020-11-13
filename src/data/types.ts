@@ -10,19 +10,29 @@ export interface ProductLine {
 export interface Invoice {
   locale: string,
   dateFormat: string,
+  withVAT: boolean,
 
   title: string
-  companyName: string
   name: string
-  companyAddress: string
-  companyAddress2: string
-  companyCountry: string
 
+  company: {
+    name: string
+    address: string
+    address2: string
+    country: string
+    cin: string
+    tim: string
+  }
   billTo: string
-  clientName: string
-  clientAddress: string
-  clientAddress2: string
-  clientCountry: string
+
+  client: {
+    name: string
+    address: string
+    address2: string
+    country: string
+    cin: string
+    tim: string
+  }
 
   invoiceTitleLabel: string
   invoiceTitle: string

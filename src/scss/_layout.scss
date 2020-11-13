@@ -55,7 +55,7 @@
 }
 
 .cell-width {
-  width: 13%;
+  width: auto;
 }
 
 .cell-width-big {
@@ -91,12 +91,11 @@
 }
 
 .side-nav {
+  z-index: 1000;
   position: fixed;
   left: 0;
   top: 0;
   height: 100%;
-  width: 300px;
-  padding: 1rem;
 }
 
 .img-fluid {
