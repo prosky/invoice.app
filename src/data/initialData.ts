@@ -1,63 +1,29 @@
-import {Invoice, ProductLine} from './types'
 import dateFormats from "./dateFormats";
-
-export const initialProductLine: ProductLine = {
-  description: '',
-  quantity: 1,
-  taxRate: 21,
-  price: 0.00,
-}
+import {defaultCurrencies} from "./currencies";
+import countries from "../data/countries";
+import Invoice from "../classes/Invoice";
+import {ProductInterface} from "./types";
 
 const DEFAULT_LOCALE = 'en-EN';
 const defaultLocale = navigator.language || DEFAULT_LOCALE;
 const defaultDateFormat = dateFormats[defaultLocale] || dateFormats[DEFAULT_LOCALE];
-const defaultCountry = defaultLocale.split('-')[1];
+const [locale, country] = defaultLocale.split('-');
 
-export const defaultInvoice: Invoice = {
+const defaultCountry = countries[defaultLocale];
+const defaultCurrency = defaultCurrencies[country];
 
-  locale: defaultLocale,
-  dateFormat: defaultDateFormat,
-  withVAT: false,
-
-  title: 'INVOICE',
-  name: '',
-
-  company:{
-    name: '',
-    address: '',
-    address2: '',
-    country: defaultCountry,
+const factory = {
+  invoice: () => {
+    return new Invoice(defaultCountry, defaultCurrency, defaultLocale, defaultDateFormat);
   },
+  product: (): ProductInterface => {
+    return {
+      description: '',
+      quantity: 1,
+      taxRate: 21,
+      price: 0.00,
+    }
+  }
+};
 
-  billTo: 'Bill To:',
-
-  client:{
-    name: '',
-    address: '',
-    address2: '',
-    country: defaultCountry,
-  },
-
-  invoiceTitleLabel: 'Invoice#',
-  invoiceTitle: '',
-  invoiceDateLabel: 'Invoice Date',
-  invoiceDate: '',
-  invoiceDueDateLabel: 'Due Date',
-  invoiceDueDate: '',
-  productLineDescription: 'Item Description',
-  productLineQuantity: 'Quantity',
-  productLinePrice: 'Price',
-  productLineTaxRate: 'Tax Rate',
-  productLineSum: 'Sum',
-  productLines: [
-    {...initialProductLine},
-  ],
-  subTotalLabel: 'Sub Total',
-  taxLabel: 'Sale Tax',
-  totalLabel: 'TOTAL',
-  currency: 'CZK',
-  notesLabel: '',// 'Notes',
-  notes: '',//'It was great doing business with you.',
-  termLabel: '',//'Terms & Conditions',
-  term: '',//'Please make the payment by the due date.',
-}
+export default factory;

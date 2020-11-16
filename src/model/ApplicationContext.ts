@@ -1,14 +1,14 @@
 import React from "react";
-import {Invoice} from "../data/types";
-import {defaultInvoice} from "../data/initialData";
+import factory from "../data/initialData";
+import Application from "../classes/Application";
 
 
-interface ApplicationProps{
-  invoice: Invoice
+interface ApplicationProps {
+  app: Application
 }
 
 const ApplicationContext = React.createContext<ApplicationProps>({
-  invoice: defaultInvoice
+  app: new Application(factory.invoice()),
 });
 
 export default ApplicationContext;

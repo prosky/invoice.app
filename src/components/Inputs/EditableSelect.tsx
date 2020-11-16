@@ -2,6 +2,7 @@ import React, {FC, useState} from 'react'
 import {Text} from '@react-pdf/renderer'
 import compose from '../../styles/compose'
 import PageContext from "../../model/PageContext";
+import {Input, Select} from "antd";
 
 export interface SelectOption {
   value: string
@@ -35,27 +36,18 @@ const EditableSelect: FC<Props> = ({
         <Text style={compose(`span ${className}`)}>{text}</Text>
       ) : (
         <>
-          {isEditing ? (
-            <select
-              className={`select ${className}`}
-              value={value}
-              onChange={onChange ? (e) => onChange(e.target.value) : undefined}
-              onBlur={() => setIsEditing(false)}
-              autoFocus={true}>
-              {Object.entries(options).map(([key, value]) => (
-                <option key={key} value={key}>{value}</option>
-              ))}
-            </select>
-          ) : (
-            <input
-              readOnly={true}
-              type="text"
-              className={`input ${className}`}
-              value={text}
-              placeholder={placeholder}
-              onFocus={() => setIsEditing(true)}
-            />
-          )}
+          <Select
+            showAction={['focus','click']}
+            size={"small"}
+            bordered={false}
+            className={`select ${className}`}
+            value={value}
+            onChange={onChange ? (value) => onChange(value) : undefined}
+            autoFocus={true}>
+            {Object.entries(options).map(([key, value]) => (
+              <Select.Option key={key} value={key}>{value}</Select.Option>
+            ))}
+          </Select>
         </>
       )}
     </>

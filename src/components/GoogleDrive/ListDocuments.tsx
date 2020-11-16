@@ -1,11 +1,10 @@
-import React, {FC, useCallback} from 'react';
+import React, {FC, useCallback, useContext} from 'react';
 import moment from 'moment';
 import {debounce} from 'lodash';
 
-import {Button, Col, Input, Row, Table, Tooltip, Upload} from 'antd';
+import {Button, Col, Input, Row, Table, Tooltip} from 'antd';
 import {useTranslation} from "react-i18next";
-import {CloudUploadOutlined} from "@ant-design/icons";
-import {RcCustomRequestOptions} from "antd/es/upload/interface";
+import ApplicationContext from "../../model/ApplicationContext";
 
 const {Search} = Input;
 
@@ -25,17 +24,29 @@ const columns = [
     title: 'Action',
     key: 'status',
     dataIndex: 'status',
-    render: () => (
+    render: (params: any) => (
       <span>
-        <Tooltip title="View Document">
-          <Button type="primary" ghost>
-            Select
-          </Button>
-        </Tooltip>
+        <ShowButton {...params}/>
       </span>
     ),
   },
 ];
+
+const ShowButton: FC = (params) => {
+  console.log(params);
+  const {app} = useContext(ApplicationContext);
+  const {t} = useTranslation();
+  const onClick = () => {
+
+  }
+  return (
+    <Tooltip title={t('View Document')}>
+      <Button type="primary" ghost onClick={onClick}>
+        {t('Select')}
+      </Button>
+    </Tooltip>
+  );
+}
 
 interface Params {
   documents: object[];

@@ -1,63 +1,68 @@
 import {CSSProperties} from 'react'
 
-export interface ProductLine {
+export interface ProductInterface {
   description: string
   quantity: number
   taxRate: number
   price: number
 }
 
-export interface Invoice {
-  locale: string,
-  dateFormat: string,
-  withVAT: boolean,
+export interface CompanyInterface {
+  name: string
+  address: string
+  address2: string
+  country: string
+  cin: string
+  tin: string
+}
 
+export interface InvoiceLabels {
   title: string
+  date: string
+  dueDate: string
+  company: string
+  client: string
+
+  //ProductLine
+  description: string,
+  quantity: string,
+  price: string,
+  taxRate: string,
+  sum: string,
+
+  //Summary
+  tax: string,
+  subTotal: string,
+  total: string,
+
+  //Notes
+  notes: string,
+  terms: string
+}
+
+export interface InvoiceInterface {
+  labels: InvoiceLabels
+
+  locale: string
+  dateFormat: string
+  withVAT: boolean
+
   name: string
 
-  company: {
-    name: string
-    address: string
-    address2: string
-    country: string
-    cin: string
-    tim: string
-  }
-  billTo: string
+  company: CompanyInterface
+  accountNumber: string
+  paymentMethod: string
+  client: CompanyInterface
 
-  client: {
-    name: string
-    address: string
-    address2: string
-    country: string
-    cin: string
-    tim: string
-  }
 
-  invoiceTitleLabel: string
-  invoiceTitle: string
-  invoiceDateLabel: string
-  invoiceDate: string
-  invoiceDueDateLabel: string
-  invoiceDueDate: string
+  title: string
+  date: string
+  dueDate: string
 
-  productLineDescription: string
-  productLineQuantity: string
-  productLinePrice: string
-  productLineTaxRate: string
-  productLineSum: string
+  products: Array<ProductInterface>
 
-  productLines: ProductLine[]
-
-  subTotalLabel: string
-  taxLabel: string
-
-  totalLabel: string
   currency: string
-
-  notesLabel: string
   notes: string
-  termLabel: string
   term: string
 }
 

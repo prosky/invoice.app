@@ -27,6 +27,9 @@ const styles: CSSClasses = {
     flexDirection: 'row',
     flexWrap: 'nowrap',
   },
+  'justify-content-end': {
+    justifyContent: 'flex-end'
+  },
 
   'w-auto': {
     flex: 1,
@@ -142,12 +145,33 @@ const styles: CSSClasses = {
     fontSize: '13px',
     color: '#555',
     padding: '40px 35px',
-  }
-  ,
+  },
 
   span: {
     padding: '4px 12px 4px 0',
   },
+
+  table: {
+    display: 'table',
+  },
+  thead: {
+    display: 'table-header-group',
+  },
+  tbody: {
+    display: 'table-row-group',
+  },
+  tr: {
+    display: 'table-row',
+  },
+  td: {
+    display: 'table-cell',
+    verticalAlign: "top"
+  },
+  th: {
+    display: 'table-cell',
+  },
+
+
 }
 
 export default styles

@@ -213,16 +213,10 @@ const formats: Record<string, string> = {
 };
 */
 
-export const currencies: Record<string, string> = {
+export const paymentMethods: Record<string, string> = {
   "USD": "Americký Dollar",
   "CZK": "Česká koruna",
   'EUR': 'Euro',
 };
 
-export const defaultCurrencies: Record<string, string> = {
-  "CZ": "CZK",
-  "US": "USD",
-  'SK': 'EUR',
-};
-
-export default currencies;
+export default paymentMethods;

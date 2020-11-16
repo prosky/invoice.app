@@ -12,7 +12,8 @@
   width: 98%;
   padding: 4px 12px 4px 0;
   margin-bottom: 1px;
-  border: 1px dotted transparent;
+  //border: 1px dotted transparent;
+  border: none;
   transition: background 0.1s ease-in-out, border-color 0.2s ease-in-out;
 }
 
@@ -40,6 +41,13 @@
   background: #fff;
   padding: 40px 35px;
   box-shadow: 0 0 17px 0 rgba(16, 40, 73, 0.09);
+
+  .ant-select-single .ant-select-selector{
+    padding: 0 !important;
+  }
+}
+.ant-select-focused{
+  background: #fdf4db;
 }
 
 .fixed-nav {

@@ -3,6 +3,8 @@ import TextareaAutosize from 'react-textarea-autosize'
 import {Text} from '@react-pdf/renderer'
 import compose from '../../styles/compose'
 import PageContext from "../../model/PageContext";
+import {Input} from "antd";
+const { TextArea } = Input;
 
 interface Props {
   className?: string
@@ -25,8 +27,9 @@ const EditableTextarea: FC<Props> = ({
       {pdfMode ? (
         <Text style={compose(`span ${className}`)}>{value}</Text>
       ) : (
-        <TextareaAutosize
-          minRows={rows || 1}
+        <TextArea
+          size={"small"}
+          rows={rows || 1}
           className={`input ${className}`}
           placeholder={placeholder}
           value={value}

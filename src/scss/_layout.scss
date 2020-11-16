@@ -78,10 +78,10 @@
 .row__remove {
   display: flex;
   padding: 0;
-  position: absolute;
+  //position: absolute;
   top: 10px;
   right: -20px;
-  opacity: 0;
+  //opacity: 0;
   transition: opacity 0.2s ease-in-out;
 
   .row:hover &,
@@ -106,4 +106,28 @@
 }
 .block{
   display: block;
+}
+.justify-content-end{
+  justify-content: flex-end;
+}
+
+
+.table{
+  display: table;
+}
+.thead{
+  display: table-header-group;
+}
+.tbody{
+  display: table-row-group;
+}
+.tr{
+  display: table-row;
+}
+.td{
+  display: table-cell;
+  vertical-align: top;
+}
+.th{
+  display: table-cell;
 }

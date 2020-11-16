@@ -2,7 +2,7 @@ import React, {FC} from 'react'
 import {Text} from '@react-pdf/renderer'
 import compose from '../../styles/compose'
 import PageContext from "../../model/PageContext";
-import { Input } from 'antd';
+import {Input, InputNumber} from 'antd';
 
 interface Props {
   className?: string
@@ -20,8 +20,10 @@ const EditableInput: FC<Props> = ({className, placeholder, value, onChange}) => 
       ) : (
         <Input
           bordered={false}
+          size={"small"}
           className={`input ${className}`}
           placeholder={placeholder}
+          title={placeholder}
           defaultValue={value}
           onChange={(e)=>onChange(e.target.value)}
         />

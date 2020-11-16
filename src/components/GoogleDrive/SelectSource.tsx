@@ -1,12 +1,12 @@
-import React, {FC, useState} from 'react';
-import {Button, Col, Drawer, Row, Space, Spin, Typography, Upload} from 'antd';
+import React, {FC, useContext, useState} from 'react';
+import {Button, Col, Drawer, Row, Space, Spin, Typography} from 'antd';
 // @ts-ignore
 import {gapi} from 'gapi-script';
 import GoogleDriveImage from '../../images/google-drive.svg';
 import ListDocuments from './ListDocuments';
 import {useTranslation} from "react-i18next";
 import {CloudUploadOutlined, LogoutOutlined} from '@ant-design/icons'
-import {RcCustomRequestOptions} from "antd/es/upload/interface";
+import ApplicationContext from "../../model/ApplicationContext";
 
 const {Text} = Typography;
 // Client ID and API key from the Developer Console
@@ -51,6 +51,9 @@ interface Props {
 
 const SelectSource: FC<Props> = ({visible}) => {
 
+  const {app} = useContext(ApplicationContext);
+  const [auth, setAuth] = useState(null);
+
   const [sidebarVisible, setSidebarVisibility] = useState(visible);
   const [listDocumentsVisible, setListDocumentsVisibility] = useState(false);
   const [documents, setDocuments] = useState<object[]>([]);
@@ -75,6 +78,10 @@ const SelectSource: FC<Props> = ({visible}) => {
         setListDocumentsVisibility(true);
         setDocuments(response.result.files);
       });
+  };
+
+  const downloadFile =  (fileId: string) => {
+    return gapi.client.drive.files.get({fileId});
   };
 
   /**
@@ -121,14 +128,15 @@ const SelectSource: FC<Props> = ({visible}) => {
         clientId: CLIENT_ID,
         discoveryDocs: DISCOVERY_DOCS,
         scope: SCOPES,
-      })
-      .then(() => {
-          // Listen for sign-in state changes.
-          gapi.auth2.getAuthInstance().isSignedIn.listen(updateSignInStatus);
-          // Handle the initial sign-in state.
-          updateSignInStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-        }
-      );
+      }).then(() => {
+        const auth_ = gapi.auth2.getAuthInstance();
+        setAuth(auth_);
+        // Listen for sign-in state changes.
+        auth_.isSignedIn.listen(updateSignInStatus);
+        // Handle the initial sign-in state.
+        updateSignInStatus(auth_.isSignedIn.get());
+      }
+    );
   };
 
   const handleClientLoad = () => {
@@ -139,17 +147,43 @@ const SelectSource: FC<Props> = ({visible}) => {
       setListDocumentsVisibility(true);
     };*/
 
-  const upload = (options: RcCustomRequestOptions) => {
+  const upload = async () => {
 
-    const request = window.gapi.client.request({
+    const invoice = app.invoice;
+    const jsonData = JSON.stringify(app.invoice);
+
+    const boundary = 'foo_bar_baz'
+    const delimiter = "\r\n--" + boundary + "\r\n";
+    const close_delim = "\r\n--" + boundary + "--";
+    let fileName = invoice.title;
+
+    let fileData = jsonData;
+    let contentType = 'application/json';
+    let metadata = {
+      'name': fileName,
+      'mimeType': contentType
+    };
+
+    let multipartRequestBody =
+      delimiter +
+      'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
+      JSON.stringify(metadata) +
+      delimiter +
+      'Content-Type: ' + contentType + '\r\n\r\n' +
+      fileData + '\r\n' +
+      close_delim;
+
+    let request = window.gapi.client.request({
       'path': 'https://www.googleapis.com/upload/drive/v3/files',
       'method': 'POST',
       'params': {'uploadType': 'multipart'},
       'headers': {
-        'Content-Type': 'multipart/related;'
+        'Content-Type': 'multipart/related; boundary=' + boundary + ''
       },
-      'body': options.file.stream()
+      'body': multipartRequestBody
     });
+
+
     request.execute(() => {
       listFiles();
     });
@@ -188,14 +222,18 @@ const SelectSource: FC<Props> = ({visible}) => {
         }
         <hr/>
         {signedInUser &&
-        <Space>
-          <Upload customRequest={upload}>
-            <Button type="primary" icon={<CloudUploadOutlined/>}>{t('Upload File')}</Button>
-          </Upload>
-          <Button onClick={handleSignOutClick} type="primary" icon={<LogoutOutlined/>}>
-            {t('Log out')}
-          </Button>
-        </Space>}
+        <div>
+          <div>
+            <Button onClick={upload} type="primary" icon={<CloudUploadOutlined/>}>{t('Upload File')}</Button>
+          </div>
+          <div>
+            <Space>
+              <Button onClick={handleSignOutClick} type="primary" icon={<LogoutOutlined/>}>
+                {t('Log out')}
+              </Button>
+            </Space>
+          </div>
+        </div>}
       </Drawer>
     </>
 

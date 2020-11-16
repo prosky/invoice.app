@@ -3,14 +3,15 @@ import ApplicationContext from "../model/ApplicationContext";
 import {pdf} from "@react-pdf/renderer";
 import {saveAs} from 'file-saver';
 import InvoicePage from "./InvoicePage";
-import {Invoice} from "../data/types";
+import {InvoiceInterface} from "../data/types";
 
 
 import { ZoomInOutlined, CloudDownloadOutlined } from '@ant-design/icons';
+import Invoice from "../classes/Invoice";
 
 
-const getFileName = (data: Invoice) => {
-  return (data.invoiceTitle || 'invoice').toLowerCase()
+const getFileName = (data: InvoiceInterface) => {
+  return (data.title || 'invoice').toLowerCase()
 }
 const getBlob = async (data: Invoice) => {
   const doc = <InvoicePage pdfMode={true} data={data}/>;
@@ -20,7 +21,8 @@ const getBlob = async (data: Invoice) => {
 }
 
 export const Download: FC = () => {
-  const {invoice: data} = useContext(ApplicationContext);
+  const {app} = useContext(ApplicationContext);
+  const {invoice: data} =app;
   const download = async () => {
     const blob = await getBlob(data);
     saveAs(blob, getFileName(data));
@@ -33,7 +35,8 @@ export const Download: FC = () => {
 }
 
 export const Open: FC = () => {
-  const {invoice: data} = useContext(ApplicationContext);
+  const {app} = useContext(ApplicationContext);
+  const {invoice: data} =app;
   const open = async () => {
     const blob = await getBlob(data);
     window.open(URL.createObjectURL(blob));
